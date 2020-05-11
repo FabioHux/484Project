@@ -2,6 +2,7 @@ import numpy as np
 from preproc import Preprocessor
 from dec_tree import dec_tree
 from neur_net import NeuralNetwork
+from KNN import KNN
 from sklearn.metrics import jaccard_score
 import pandas as pd
 def kfold(matrix,k,values,clf):
@@ -81,7 +82,7 @@ def main():
     preprocessor.preprocess(f)
     preprocessor.cleanUnfilled()
 
-    values = split_class(preprocessor.getColumn("Lifeexpectancy"), 44, 90, k=5)
+    values = split_class(preprocessor.getColumn("Lifeexpectancy"), 44, 90, k=5).astype('int')
 
     '''
     print(np.size(values,0))
@@ -94,14 +95,18 @@ def main():
     for x in preprocessor.getMatrix()[0]:
         print(int(x))
     '''
+    '''
     print("tree")
     clf=dec_tree(max_depth=5,min_samples_split=3)
     kfold(preprocessor.getMatrix(),5,values,clf)
 
 
-    
     clf=NeuralNetwork( activation="tanh",hidden_layer_sizes = (1000,100))
     print("neural net")
+    kfold(preprocessor.getMatrix(),10,values,clf)'''
+    
+    clf=KNN()
+    print("KNN")
     kfold(preprocessor.getMatrix(),10,values,clf)
 
     
