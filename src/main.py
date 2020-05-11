@@ -107,7 +107,10 @@ def main():
     print("KNN")
     kfold(preprocessor.getMatrix(),10,values,clf)
 
+    '''
     clf=NeuralNetwork(solver="adam", activation="relu", hidden_layer_sizes = (200,25,200,25,100))
+    kfold(preprocessor.getMatrix(),4,values,clf, class_count)'''
+    
     kfold(preprocessor.getMatrix(),4,values,clf, class_count)
 
 
