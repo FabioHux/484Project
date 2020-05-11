@@ -1,7 +1,5 @@
 import numpy as np
 from preproc import Preprocessor
-from sklearn.metrics import jaccard_score
-import pandas as pd
 
 def split_class(values, low, high, k = 2):
     if low > np.amin(values) or high < np.amax(values):
@@ -27,6 +25,8 @@ def main():
     preprocessor.cleanUnfilled()
 
     values = split_class(preprocessor.getColumn("Lifeexpectancy"), 44, 90, k=4)
+
+    print(np.shape(preprocessor.getMatrix()))
 
     
     print(preprocessor.getAttributes())

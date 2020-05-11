@@ -39,7 +39,10 @@ class Preprocessor():
             if self.attributes[i] == attribute:
                 col = i
                 break
-        return self.matrix[...,col]
+        ret = self.matrix[...,col]
+        self.matrix = np.hstack((self.matrix[...,0:col], self.matrix[...,col + 1:]))
+        self.attributes = np.hstack((self.attributes[...,0:col], self.attributes[...,col + 1:]))
+        return ret
 
     def isFilled(self, row):
         ln = np.shape(row)[0]
