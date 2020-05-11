@@ -1,26 +1,15 @@
 from sklearn import tree
 import numpy as np
+
+from sklearn import tree
+
 class dec_tree():
-    def __init__(self, matrix):
-        self.matrix=matrix
+    def __init__(self):
+        self.clf=tree.DecisionTreeClassifier()
 
-    def tree():
-            
-        clf = tree.DecisionTreeClassifier()
-        clf=clf.fit(w,vals)
-        
-        #print(clf)
-        #print(vmain.get_feature_names())
+    def setUp(self,matrix,values):
+        self.clf.fit(matrix, values)
 
-        valid,w1=parseval(validation[num])
-        pred=[]
-        w1=vmain.fit_transform(w1)
+    def predict(self, matrix):
+        return self.clf.predict(matrix)
 
-        #print(valid)
-        for x in range(len(valid)):
-            pred.append(clf.predict(w1)[0])
-
-        #print(f1_score(valid, pred, average='micro'))
-        #print(pred)
-        if '1' in pred:
-            print("yes")
