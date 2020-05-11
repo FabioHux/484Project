@@ -60,6 +60,7 @@ class Preprocessor():
         
         self.matrix = nMatrix
         self.countries = nCountries
+        print("hello World")
     
     #def removeCountry(self, country_name):
 
