@@ -80,6 +80,11 @@ def main():
 
     '''
     print(np.size(values,0))
+=======
+    print(np.shape(preprocessor.getMatrix()))
+
+    
+
     print(preprocessor.getAttributes())
     for x in preprocessor.getMatrix()[0]:
         print(int(x))
