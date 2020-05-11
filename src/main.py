@@ -2,6 +2,8 @@ import numpy as np
 from preproc import Preprocessor
 from dec_tree import dec_tree
 from neur_net import NeuralNetwork
+from KNN import KNN
+
 from testing import Tester
 
 def kfold(matrix,k,values,clf, cls_cnt):
@@ -33,11 +35,6 @@ def kfold(matrix,k,values,clf, cls_cnt):
         for x in range(np.size(res,0)):
             if res[x]==part_cls_val[x]:
                 counter+=1
-        print(counter)
-        print("")
-
-
-
 
 def split_class(values, low, high, k = 2):
     if low > np.amin(values) or high < np.amax(values):
@@ -58,12 +55,38 @@ def split_class(values, low, high, k = 2):
 def main():
     f = open("../doc/led.csv", "r")
 
+    
     preprocessor = Preprocessor()
     preprocessor.preprocess(f)
     preprocessor.cleanUnfilled()
     class_count = 50
 
     values = split_class(preprocessor.getColumn("Lifeexpectancy"), 40, 90, k=class_count)
+    '''
+    print(np.size(values,0))
+
+
+    print(preprocessor.getAttributes())
+    for x in preprocessor.getMatrix()[0]:
+        print(int(x))
+    '''
+    '''
+    print("tree")
+    clf=dec_tree(max_depth=5,min_samples_split=3)
+    kfold(preprocessor.getMatrix(),5,values,clf)
+
+
+    clf=NeuralNetwork( activation="tanh",hidden_layer_sizes = (1000,100))
+    print("neural net")
+    kfold(preprocessor.getMatrix(),10,values,clf)'''
+    
+    clf=KNN()
+    print("KNN")
+    kfold(preprocessor.getMatrix(),10,values,clf)
+
+    '''
+    clf=NeuralNetwork(solver="adam", activation="relu", hidden_layer_sizes = (200,25,200,25,100))
+    kfold(preprocessor.getMatrix(),4,values,clf, class_count)'''
 
     clf=dec_tree()
     kfold(preprocessor.getMatrix(),4,values,clf, class_count)
