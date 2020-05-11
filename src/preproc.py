@@ -4,7 +4,6 @@ class Preprocessor():
     def preprocess(self, file):
         entries = file.readlines()
 
-        print(len(entries))
         self.matrix = np.empty((0,len(entries[0].split(",")) - 2))
         self.countries = np.empty(0)
         self.attributes = np.asarray(entries[0].split(",")[2:])
@@ -16,18 +15,10 @@ class Preprocessor():
                 if j == 0:
                     self.countries = np.append(self.countries, line_el[j])
                 elif j >= 2:
-                    if j == 2:
-                        if line_el[j] == "Developing":
-                            arr = np.append(arr, 0)
-                        elif line_el[j] == "Developed":
-                            arr = np.append(arr, 1)
-                        else:
-                            line_el[j] == None
-                    else:
-                        try:
-                            arr = np.append(arr, float(line_el[j]))
-                        except:
-                            arr = np.append(arr, None)
+                    try:
+                        arr = np.append(arr, float(line_el[j]))
+                    except:
+                        arr = np.append(arr, None)
                     
             self.matrix = np.append(self.matrix, [arr], axis = 0)
 
@@ -39,6 +30,16 @@ class Preprocessor():
     
     def getCountries(self):
         return self.countries
+    
+    def getColumn(self, attribute = None):
+        if attribute == None:
+            return None
+        col = 0
+        for i in range(np.shape(self.attributes)[0]):
+            if self.attributes[i] == attribute:
+                col = i
+                break
+        return self.matrix[...,col]
 
     def isFilled(self, row):
         ln = np.shape(row)[0]
