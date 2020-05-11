@@ -20,21 +20,21 @@ def kfold(matrix,k,values,clf):
         if part_end >=np.shape(matrix)[0]:
             part_end=np.shape(matrix)[0]
 
-        '''matrix[...,0:part_start],matrix[...,part_end:np.shape(matrix)[0]]'''
     
-        part_train=matrix[:part_start]
-        for x in matrix[part_end:]:
-            part_train.append(x)
-
-        #print(matrix[...,0:part_start])
+        part_train = np.append(matrix[:part_start,...], matrix[part_end:,...], axis = 0)
         part_val=matrix[part_start:part_end]
 
         part_cls_train=np.append(values[:part_start],[values[part_end:]])
         part_cls_val=values[part_start:part_end]
+        
+        test = Tester(part_cls_val, cls_cnt)
 
-        #print(part_cls_train)
         clf.setUp(part_train,part_cls_train)
         res=clf.predict(part_val)
+
+        print(test.get_jaccard(res))
+        print(test.get_f1(res))
+        print(test.get_accur(res))
         counter=0
         for x in range(np.size(res,0)):
             if res[x]==part_cls_val[x]:
@@ -81,15 +81,13 @@ def main():
     preprocessor = Preprocessor()
     preprocessor.preprocess(f)
     preprocessor.cleanUnfilled()
+    class_count = 50
 
     values = split_class(preprocessor.getColumn("Lifeexpectancy"), 44, 90, k=5).astype('int')
 
     '''
     print(np.size(values,0))
-=======
-    print(np.shape(preprocessor.getMatrix()))
 
-    
 
     print(preprocessor.getAttributes())
     for x in preprocessor.getMatrix()[0]:
@@ -109,9 +107,8 @@ def main():
     print("KNN")
     kfold(preprocessor.getMatrix(),10,values,clf)
 
-    
-    
-
+    clf=NeuralNetwork(solver="adam", activation="relu", hidden_layer_sizes = (200,25,200,25,100))
+    kfold(preprocessor.getMatrix(),4,values,clf, class_count)
 
 
 main()
