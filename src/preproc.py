@@ -4,7 +4,6 @@ class Preprocessor():
     def preprocess(self, file):
         entries = file.readlines()
 
-        print(len(entries))
         self.matrix = np.empty((0,len(entries[0].split(",")) - 2))
         self.countries = np.empty(0)
         self.attributes = np.asarray(entries[0].split(",")[2:])
