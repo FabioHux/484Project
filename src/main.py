@@ -3,15 +3,11 @@ from preproc import Preprocessor
 from dec_tree import dec_tree
 from neur_net import NeuralNetwork
 from KNN import KNN
-from sklearn.metrics import jaccard_score
-import pandas as pd
-def kfold(matrix,k,values,clf):
+
+from testing import Tester
+
+def kfold(matrix,k,values,clf, cls_cnt):
     partition_size=int(np.shape(matrix)[0]/k)
-    matrix=matrix.tolist()
-
-
-    average=0
-
 
 
     for i in range(k):
@@ -39,25 +35,6 @@ def kfold(matrix,k,values,clf):
         for x in range(np.size(res,0)):
             if res[x]==part_cls_val[x]:
                 counter+=1
-                '''
-                print(res[x])
-                print(part_cls_val[x])
-                '''
-        average+=counter/partition_size
-        
-        if counter/partition_size>=.65:
-            print(counter/partition_size)
-
-        else:
-            print(counter/partition_size)
-
-            
-    print("average:"+str(average/k))
-
-
-    
-
-    
 
 def split_class(values, low, high, k = 2):
     if low > np.amin(values) or high < np.amax(values):
@@ -78,13 +55,13 @@ def split_class(values, low, high, k = 2):
 def main():
     f = open("../doc/led.csv", "r")
 
+    
     preprocessor = Preprocessor()
     preprocessor.preprocess(f)
     preprocessor.cleanUnfilled()
     class_count = 50
 
-    values = split_class(preprocessor.getColumn("Lifeexpectancy"), 44, 90, k=5).astype('int')
-
+    values = split_class(preprocessor.getColumn("Lifeexpectancy"), 40, 90, k=class_count)
     '''
     print(np.size(values,0))
 
@@ -110,7 +87,11 @@ def main():
     '''
     clf=NeuralNetwork(solver="adam", activation="relu", hidden_layer_sizes = (200,25,200,25,100))
     kfold(preprocessor.getMatrix(),4,values,clf, class_count)'''
-    
+
+    clf=dec_tree()
+    kfold(preprocessor.getMatrix(),4,values,clf, class_count)
+
+    clf=NeuralNetwork(solver="adam", activation="relu", hidden_layer_sizes = (200,25,200,25,100))
     kfold(preprocessor.getMatrix(),4,values,clf, class_count)
 
 
