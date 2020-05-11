@@ -3,6 +3,8 @@ import numpy as np
 class Preprocessor():
     def preprocess(self, file):
         entries = file.readlines()
+
+        print(len(entries))
         self.matrix = np.empty((0,len(entries[0].split(",")) - 2))
         self.countries = np.empty(0)
         self.attributes = np.asarray(entries[0].split(",")[2:])
@@ -56,6 +58,7 @@ class Preprocessor():
                 nCountries = np.append(nCountries, self.countries[i])
         
         self.matrix = nMatrix
+        self.countries = nCountries
 
     
     #def removeCountry(self, country_name):
