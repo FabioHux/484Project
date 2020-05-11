@@ -1,12 +1,12 @@
 import numpy as np
 from preproc import Preprocessor
 from dec_tree import dec_tree
+from neur_net import NeuralNetwork
 from sklearn.metrics import jaccard_score
 import pandas as pd
-def kfold(matrix,k,values):
+def kfold(matrix,k,values,clf):
     partition_size=int(np.shape(matrix)[0]/k)
     matrix=matrix.tolist()
-    clf=dec_tree()
     for i in range(k):
         part_start=i*partition_size
         part_end=(i+1)*partition_size
@@ -85,7 +85,13 @@ def main():
         print(int(x))
     '''
 
-    kfold(preprocessor.getMatrix(),3,values)
+    clf=dec_tree()
+    kfold(preprocessor.getMatrix(),3,values,clf)
+    
+    clf=NeuralNetwork()
+    kfold(preprocessor.getMatrix(),3,values,clf)
+    
+    
 
 
 
