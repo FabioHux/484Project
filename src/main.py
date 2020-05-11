@@ -21,9 +21,6 @@ def kfold(matrix,k,values,clf):
 
         #print(matrix[...,0:part_start])
         part_val=matrix[part_start:part_end]
-        for x in part_val:
-            if x in part_train:
-                print(True)
 
         part_cls_train=np.append(values[:part_start],[values[part_end:]])
         part_cls_val=values[part_start:part_end]
