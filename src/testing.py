@@ -1,10 +1,18 @@
 import numpy as np
+import math
 
 class Tester():
-    def __init__(self, expected, k):
+    def __init__(self, expected, k, step_size):
         self.k = k
+        self.expected = expected
         self.matrix, self.weights = self.transform(expected)
         self.onesmat = np.ones(np.shape(self.matrix))
+        self.step_size = step_size
+        self.exp_dist = self.eucl_dist(expected * step_size)
+
+    
+    def eucl_dist(self, values):
+        return math.sqrt(np.sum(np.power(values,2)))
 
     def transform(self, values):
         matrix = np.empty((0, np.shape(values)[0]), dtype='int')
@@ -45,6 +53,7 @@ class Tester():
 
         score = tp / (tp + fp + fn)
         return np.sum(score * self.weights)
+        
     def get_jaccard(self, result):
         r_matrix, r_weight = self.transform(result)
         tp = self.get_tp(r_matrix)
@@ -57,3 +66,12 @@ class Tester():
         
         score = tp / (tp + fp + fn)
         return np.sum(score * self.weights)
+    
+    def get_dist_acc(self, result):
+        score = ((self.k - 1) - np.absolute(self.expected-result)) / (self.k - 1)
+        w = np.ones(np.shape(self.expected)[0]) / (np.shape(self.expected)[0])
+        return np.sum(score * w)
+    
+    def get_sim_acc(self, result):
+        dist_r = self.eucl_dist(result * self.step_size)
+        return np.dot(self.expected * self.step_size, result * self.step_size)/ (dist_r * self.exp_dist)
