@@ -3,47 +3,42 @@ from copy import copy
 from sklearn.metrics.pairwise import cosine_similarity
 
 class KNN():
-    def __init__(self):
-        sim=0
+    def __init__(self, cls_cnt, k=10):
+        self.cls_cnt = cls_cnt
+        self.k = k
 
     def setUp(self,matrix,values):
         self.matrix=matrix
         self.values=values
+    
+    def setClsCnt(self, cls_cnt):
+        self.cls_cnt = cls_cnt
 
-    def predict(self, matrix,k=10):
+    def predict(self, matrix):
         sim=cosine_similarity(matrix,self.matrix)
-        low=1000
-        high=0
-        for x in self.values:
-            if x<low:
-                low=x
-            if x >high:
-                high=x
 
+        ret_val = np.empty(0)
 
-        ret_val=[]
+        multi_var = np.zeros(self.cls_cnt)
 
         for x in sim:
-            
-            multi_var=[0 for x in range(high-low+1)]
+            multi_var *= 0
 
+            endval = copy(self.values)
+            newk = copy(x)
+            mapped = sorted(zip(newk,endval), reverse = True)
 
-            num=0
-            endval=copy(self.values)
-            newk=copy(x)
-            mapped = zip(newk,endval)
-            mapped = sorted(mapped, reverse = True)
-
-            for y in range(0,k):
-                multi_var[mapped[y][1]-1]+=1
+            for y in range(self.k):
+                multi_var[mapped[y][1]] += 1
             
             abs=0
+            i = 0
+            hi = 0
             for y in multi_var:
-                if y>abs:
-                    abs=y
-
-            for y in range(len(multi_var)):
-                if multi_var[y]==abs:
-                    ret_val.append(y+1)
-                    break
+                if y > abs:
+                    abs = y
+                    hi = i
+                i += 1
+            ret_val = np.append(ret_val, hi)
+        
         return ret_val

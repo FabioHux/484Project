@@ -43,6 +43,10 @@ class Preprocessor():
         self.matrix = np.hstack((self.matrix[...,0:col], self.matrix[...,col + 1:]))
         self.attributes = np.hstack((self.attributes[...,0:col], self.attributes[...,col + 1:]))
         return ret
+    
+    def insertColumn(self, col, attribute):
+        self.attributes = np.append(self.attributes, attribute)
+        self.matrix = np.vstack((self.matrix, [col]))
 
     def isFilled(self, row):
         ln = np.shape(row)[0]
