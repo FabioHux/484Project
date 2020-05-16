@@ -1,5 +1,9 @@
 from preproc import Preprocessor
 import numpy as np
+
+"""
+File made by Vincent to initially clean the original excel file
+"""
 #seperates by tabs and lines and writes to another file.
 file_t=open("../doc/led.csv",'r')
 file_w=open("led2.csv",'w')
