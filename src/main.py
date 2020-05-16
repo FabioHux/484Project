@@ -122,19 +122,34 @@ def split_class(values, low, high, k = 2):
     return new_values
 
 """
+Function to enact first expirement.
 
+Experiment concerns with seeing the performance of the three models (KNN, Neural Network, Decision Tree) based on the modification of the class count in the data
+
+The method of testing will be through the kfold function (see kfold()) with 10 folds. The experiment will only take the f1-score as a determination.
+
+It will return a matrix (2D numpy array) of every model's f1 score as a row and n columns representing a different class count that it was tested with (Note the class count go from [4,24] in increments of 2)
 """
 def experiment1(preprocessor):
     results = np.empty((0,3))
     values = preprocessor.getColumn("Lifeexpectancy")
     clf = [KNN(0, k = 20), NeuralNetwork(activation = "tanh", hidden_layer_sizes = (100,25)), dec_tree()]
-    for cls_cnt in range(4,15,2):
+    for cls_cnt in range(4,25,2):
         clf[0].setClsCnt(cls_cnt)
         cls_values = split_class(values, 40, 90, k=cls_cnt).astype('int')
-        results = np.append(results, [[kfold(preprocessor.getMatrix(), 10, cls_values, x, cls_cnt)[1][3] for x in clf]], axis = 0)
+        results = np.append(results, [[kfold(preprocessor.getMatrix(), 10, cls_values, x, cls_cnt)[1][1] for x in clf]], axis = 0)
     
     return results
 
+"""
+Function to enact the second experiment
+
+Experiment concerns with seeing the performance of the three models on measuring each country.
+
+Function will test each model with countryfold (see countryfold) to see its score and how it performs.
+
+It will return a matrix (2D numpy array) of every model's score (in this instance jaccard, f1-score, and accuracy) as the column, with each row representing the model
+"""
 def experiment2(preprocessor):
     results = np.empty((0,3))
     values = split_class(preprocessor.getColumn("Lifeexpectancy"), 40, 90, k=10).astype('int')
@@ -142,8 +157,13 @@ def experiment2(preprocessor):
         results = np.append(results, [countryfold(preprocessor.getMatrix(), 10, values, clf, 10,preprocessor.getCountries())[1]], axis = 0)
     return results
 
-def main():
-    f = open("../doc/led.csv", "r")
+"""
+Main function of the program, takes in a filename (as a string) of the csv file required to extract.
+
+Modifiable to user's need
+"""
+def main(filename):
+    f = open(filename, "r")
     
     preprocessor = Preprocessor()
     preprocessor.preprocess(f)
@@ -151,4 +171,4 @@ def main():
     print(experiment1(preprocessor))
 
 
-main()
+main("../doc/led.csv")
